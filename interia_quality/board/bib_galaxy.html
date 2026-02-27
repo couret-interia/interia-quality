@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>InterIA – BibTeX Galaxy Explorer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link id="favicon" rel="icon" href="">
+
+</head>
+<body>
+
+<h1>InterIA – BibTeX Galaxy Explorer</h1>
+<div id="summary">Loading bib_galaxy.json…</div>
+
+<div class="container" id="content"></div>
+<!-- Mini Init to Common board JS: add style, favicon, top-bar menus, light/dark switch ... -->
+<script>
+// hide without style (plank loader)
+document.body.style='display:none';
+// Init global vars
+iia_page  = location.pathname.substring(location.pathname.lastIndexOf('/') + 1),
+base_href = (iia_page == 'index.html' ? '../../' : ''), // Only docs/quality have index.html (wip)
+board_js  = base_href + 'js/board.js';
+// Add Board (js) in head
+script     = document.createElement('script');
+script.src = base_href + 'js/board.js';
+document.head.appendChild(script);
+</script>
+
+<script>
+async function main() {
+  let data;
+  try {
+    data = await loadJSON("bib_galaxy.json");
+  } catch {
+    document.getElementById("summary").textContent = "❌ bib_galaxy.json not found. Run `bib-galaxy` first.";
+    return;
+  }
+
+  const summary = document.getElementById("summary");
+  const container = document.getElementById("content");
+
+  const completeness = data.completeness_score;
+  const density = data.citation_density;
+
+  summary.textContent =
+    `Citation density: ${density} · Completeness: ${completeness}`;
+
+  container.innerHTML = "";
+
+  const missing = data.cited_but_missing;
+  if (missing.length) {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <h2>⚠️ Missing references</h2>
+      <p class="cite-list">${missing.map(k => `<code>${k}</code>`).join(" ")}</p>
+    `;
+    container.appendChild(card);
+  }
+
+  const unused = data.defined_but_not_cited;
+  if (unused.length) {
+    const card = document.createElement("div");
+    card.className = "card";
+    const display = unused.slice(0, 20);
+    card.innerHTML = `
+      <h2>📚 Unused references</h2>
+      <p class="small">(showing first ${display.length}${unused.length > 20 ? " of "+unused.length : ""})</p>
+      <p class="cite-list">${display.map(k => `<code>${k}</code>`).join(" ")}</p>
+    `;
+    container.appendChild(card);
+  }
+
+  const cited = data.cited_and_defined;
+  if (cited.length) {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <h2>🌟 Cited & defined references</h2>
+      <p class="cite-list">${cited.map(k => `<code>${k}</code>`).join(" ")}</p>
+    `;
+    container.appendChild(card);
+  }
+
+  // Citations per file
+  const cpf = data.citations_per_file;
+  const cardF = document.createElement("div");
+  cardF.className = "card";
+  cardF.innerHTML = `<h2>📄 Citations per file</h2>`;
+  const list = document.createElement("ul");
+
+  for (const [fname, cites] of Object.entries(cpf)) {
+    const li = document.createElement("li");
+    li.innerHTML = `<b>${fname}</b>: ${cites.length} citations`;
+    list.appendChild(li);
+  }
+
+  cardF.appendChild(list);
+  container.appendChild(cardF);
+}
+
+// board.js call main();
+</script>
+
+</body>
+</html>

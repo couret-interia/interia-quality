@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>InterIA – COSMOS TIMELINE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link id="favicon" rel="icon" href="">
+
+</head>
+<body>
+
+<h1>InterIA – COSMOS TIMELINE</h1>
+<div id="summary">Loading cosmos_timeline.json…</div>
+<canvas id="canvas" width="1000" height="400" class="wide"></canvas>
+<!-- Mini Init to Common board JS: add style, favicon, top-bar menus, light/dark switch ... -->
+<script>
+// hide without style (plank loader)
+document.body.style='display:none';
+// Init global vars
+iia_page  = location.pathname.substring(location.pathname.lastIndexOf('/') + 1),
+base_href = (iia_page == 'index.html' ? '../../' : ''), // Only docs/quality have index.html (wip)
+board_js  = base_href + 'js/board.js';
+// Add Board (js) in head
+script     = document.createElement('script');
+script.src = base_href + 'js/board.js';
+document.head.appendChild(script);
+</script>
+
+<script>
+function normalize(arr) {
+  const max = Math.max(...arr, 1);
+  return arr.map(v => v / max);
+}
+
+async function main() {
+  let timeline;
+  try {
+    timeline = await loadJSON("cosmos_timeline.json");
+  } catch {
+    document.getElementById("summary").textContent = "No timeline yet.";
+    return;
+  }
+
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width;
+  const H = canvas.height;
+
+  const times = timeline.map(t => t.timestamp);
+  const CCI = timeline.map(t => t.summary.cosmic_coherence_index);
+  const labels = timeline.map(t => t.summary.latex_labels);
+  const cites = timeline.map(t => t.summary.bibtex_completeness);
+
+  // Normalize
+  const CCI_n = normalize(CCI);
+  const labels_n = normalize(labels);
+  const cites_n = normalize(cites);
+
+  // Draw axes
+  ctx.clearRect(0, 0, W, H);
+  ctx.strokeStyle = "#444";
+  ctx.beginPath();
+  ctx.moveTo(30, H-30);
+  ctx.lineTo(W-10, H-30);
+  ctx.stroke();
+
+  const step = (W - 40) / Math.max(CCI.length - 1, 1);
+
+  // Draw CCI curve
+  ctx.strokeStyle = "#00E6FF";
+  ctx.beginPath();
+  ctx.moveTo(30, H - 30 - CCI_n[0]*(H-60));
+  for (let i=1;i<CCI_n.length;i++) {
+    ctx.lineTo(30 + i*step, H - 30 - CCI_n[i]*(H-60));
+  }
+  ctx.stroke();
+
+  // Draw labels curve
+  ctx.strokeStyle = "#9D7BFF";
+  ctx.beginPath();
+  ctx.moveTo(30, H - 30 - labels_n[0]*(H-60));
+  for (let i=1;i<labels_n.length;i++) {
+    ctx.lineTo(30 + i*step, H - 30 - labels_n[i]*(H-60));
+  }
+  ctx.stroke();
+
+  // Draw cites curve
+  ctx.strokeStyle = "#FF9FE5";
+  ctx.beginPath();
+  ctx.moveTo(30, H - 30 - cites_n[0]*(H-60));
+  for (let i=1;i<cites_n.length;i++) {
+    ctx.lineTo(30 + i*step, H - 30 - cites_n[i]*(H-60));
+  }
+  ctx.stroke();
+
+  document.getElementById("summary").textContent =
+    `Snapshots: ${CCI.length} · Latest CCI: ${CCI[CCI.length-1]}`;
+}
+
+// board.js call main();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,391 @@
+.header-line {
+  display: inherit;
+  overflow: auto;
+}
+
+/* --- Card toggle Snippets ideas: 🗹 ✓ ✗ ⏼ 🕶  🖒 ▲ ▼ --- */
+
+.card h2,
+.card h2::before {
+  cursor: pointer;
+}
+
+.card h2:not(.closed)::before {
+  /* content: '🗸 '; */
+  color: var(--muted);
+}
+.card h2::before {
+  content: '✓ ';
+  color: var(--accent-ok);
+}
+
+.tool .card h2,
+.tool .card h2::before {
+  cursor: unset;
+}
+
+.tool .card h2::before {
+  content: '🔧 ';
+}
+
+.num_snip::before {
+  content: "#";
+  color: var(--muted);
+}
+.num_snip::after {
+  content: " · ";
+  color: var(--muted);
+}
+
+/* https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/::before#examples */
+
+q::before {
+  content: "«";
+  color: var(--muted);
+}
+
+q::after {
+  content: "»";
+  color: var(--muted);
+}
+
+/* --- for hljs block of line numbers --- */
+
+.hljs-ln-numbers {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  text-align: center;
+  color: var(--muted);
+  border-right: 1px solid var(--muted);
+  vertical-align: top;
+  padding-right: 5px;
+
+  /* your custom style here */
+}
+
+/* for block of code */
+
+.hljs-ln-code {
+  padding-left: 10px;
+}
+
+/* --- Copy System --- */
+
+.copy-button {
+  position: relative;
+  top: 3rem;
+  right: calc(100% - 200% + 7.2rem);
+  width: 7.2rem;
+  background-color: var(--bgg1);
+  color: var(--fg);
+  border: none;
+  padding: 10px 15px;
+  margin-top: -1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1001;
+  transition: background-color 0.3s;
+}
+
+.copy-button:hover {
+  background-color: var(--bgg2); /* #45a049 Couleur au survol du bouton */
+}
+
+/* --- sticky's helper --- */
+
+h3.sticky {
+  display: inline-block; /* (fix copy-button position) ok with 'initial' */
+}
+.sticky {
+  position: sticky;
+  top: 50px;
+  left: calc(100% - 25px);
+}
+.card .header-line.sticky {
+  display: inline-flex;
+  left: calc(25vw + 2rem);
+  top: 5px;
+  overflow: hidden;
+  max-width: 44vw;
+  padding: .4rem;
+  z-index: 1002;
+}
+.card h3.sticky {
+  top: calc(50px + 2.4rem);
+  font-size: var(--text-xs);
+  width: 5.5rem;
+  text-align: center;
+  letter-spacing: -.0321rem;
+}
+.card .header-line.sticky * {
+  max-width: calc(44vw - 1rem);
+  white-space: nowrap;
+  overflow: scroll;
+  text-overflow: ellipsis;
+  text-overflow: ellipsis ellipsis;
+}
+.card .header-line.sticky > a {
+  max-width: 8vw;
+  min-width: 1rem;
+}
+@media (max-width: 999px) {
+  .card .header-line.sticky h2 {
+    font-size: var(--text-xs);
+  }
+  .card .header-line.sticky {
+    top: 3rem;
+    left: 0;
+  }
+  .card .header-line.sticky > a {
+    max-width: 4vw;
+  }
+}
+
+/* --- toggler (Inspired of PluXml core admin theme.css) --- */
+
+.toggler {
+  display: none;
+}
+.toggler + label {
+  /* display: inline; */
+}
+.toggler + label span {
+  color: #258fd6;
+}
+.toggler + label span:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  color: #444;
+}
+
+/* 🖗 interseting effect */
+/* .toggler + label, */
+.toggler + label > h3,
+.toggler + label > h4 {
+  /* margin: .4rem; */
+  display: inline-block;
+}
+
+.toggler + label,
+.toggler + label > h3,
+.toggler + label > h4,
+.toggler + label span:first-of-type,
+.toggler + label span:last-of-type {
+  cursor: pointer;
+  margin-bottom: -1rem;
+  text-transform: capitalize;
+}
+
+.toggler + label span:first-of-type,
+.toggler + label span:last-of-type {
+  display: inline-block;
+}
+
+/* --- Chromium fix (Diff settings sticky) --- */
+
+.toggler + label::before {
+  content: 'yep²';
+  display: block;
+  font-size: 0;
+}
+
+/* Snippets : ☐ ☑ 🗸 ✓ ✗ ⏼ 🕶  🖒 */
+
+.toggler:not(:checked) + label > h3::before {
+  content: '☑ ︎';
+  color: var(--accent-ok);
+}
+.toggler + label > h3::before {
+  content: '☐ ';
+  cursor: pointer;
+  color: var(--muted);
+}
+
+/* Classic ▲ ▼ */
+
+.toggler:not(:checked) + label > h3::after {
+  content: ' ▼';
+}
+.toggler + label > h3::after {
+  content: ' ▲';
+  font-size: small;
+  color: var(--accent-info);
+}
+
+/* hide not .custom(ised) by span 🔼 span 🔽 (in label) */
+
+.toggler:not(.custom) + label > span,
+.toggler + label:not(.custom) > span {
+  display: none;
+}
+
+/* hide Classic ▲▼ icons on .custom and h(3|4).sticky (tweak). Note: Show by span 🔼 span 🔽 (in label) */
+
+.toggler + label > h3.sticky::after,
+.toggler + label > h4.sticky::after,
+.toggler.custom + label > h3::after,
+.toggler.custom + label > h4::after,
+.toggler + label.custom > h3::after,
+.toggler + label.custom > h4::after {
+  display: none;
+}
+
+/* --- 🧰 Style for Tools --- */
+
+.tool .toggler + label > h3::before {
+  content: '⏼ ';
+}
+
+/* Tools box 🌑 🌕 🔲  🗃  ⯈ */
+
+.tool.toggler:not(:checked) + label > h4::after {
+  content: ' 🔻';
+}
+.tool.toggler + label > h4::after {
+  content: ' 🔺';
+}
+
+/* Fix place after (when close) */
+
+.toggler + label::after {
+  content: '';
+  display: block;
+}
+
+/* Note: Risk of trouble in `.toggler.custom` with more 2 span (after the 2 On/Off span's in label) */
+.toggler:not(:checked) + label + button + pre,
+.toggler:not(:checked) + label + button,
+.toggler:not(:checked) + label + pre,
+.toggler:not(:checked) + label + div,
+.toggler:not(:checked) + label span:first-of-type,
+.toggler:checked + label span:not(:first-of-type) {
+  display: none;
+}
+
+/* --- diff (minimal) --- */
+
+.card textarea {
+  overflow: auto;
+  font: var(--font-code);
+  white-space: nowrap;
+  width: 100%;
+  resize: none;
+  height: 25vh;
+  min-height: 175px;
+  padding: 0;
+}
+#diff del, #diff ins {
+  padding: .1rem 0;
+  text-decoration: none;
+}
+#diff del {
+  background: #fadad7;
+  color: #b30000;
+}
+#diff ins {
+  background: #eaf2c2;
+  color: #406619;
+}
+#diff .chunk-header {
+  color: #8a008b;
+  text-decoration: none;
+}
+
+.tool .badge label{cursor:pointer;margin:0 .25rem;color:var(--fg)}
+.tool .badge input{display:none}
+.tool .badge input + label{padding:.2rem .5rem}
+.tool .badge input:checked + label{background:var(--mta-bg);color:var(--mta-cr);border-radius:var(--mta-br)}
+
+#card-1 {
+  padding: .5rem .85rem;
+}
+#card-1 .header-line.sticky {
+  top: calc(5px + 2rem);
+}
+#card-1 .header-line.sticky h2 {
+  display: none;
+}
+#card-1 .header-line.sticky span.badge::before {
+  content: '🎯 Diff ';
+}
+#card-2 .header-line.sticky span.badge::before {
+  content: '🔑 JSON ';
+}
+
+/* Load snip's only work when diff on snippet card's*/
+
+#tools .btn-ttj {
+  display: none;
+}
+
+/* --- Fullscreen helpers --- */
+
+.tfs{
+  float: right;
+  color: var(--muted);
+}
+
+textarea:focus-visible,
+textarea:fullscreen,
+textarea:focus,
+textarea:hover,
+textarea {
+  outline: 0 solid transparent;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.card:fullscreen {
+  overflow: auto;
+}
+
+.card:fullscreen .grid {
+  max-width: 100vw;
+  gap: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.card:fullscreen .iia-ace, .card:fullscreen textarea {
+  height: calc(100vh - 10rem);
+}
+
+.card .card:fullscreen .iia-ace, .card .card:fullscreen textarea {
+  height: calc(100vh - 15rem);
+}
+
+@media (max-width: 999px) {
+  #card-1 .header-line.sticky {
+    top: calc(3rem + 2.5rem);
+    margin-left: -1rem;
+  }
+}
+
+.top-bar select {
+  padding: 0;
+}
+
+@media (max-width: 640px) {
+  .top-bar select {
+    max-width: 6.18rem;
+  }
+}
+
+#jsoneditor{text-align: left}
+
+/* Setting height is also important, otherwise ace editor wont showup **/
+
+.iia-ace {
+    text-align: left;
+    height: 25vh;
+    min-height: 175px;
+}
+.ace_editor {
+    font: var(--font-code);
+}

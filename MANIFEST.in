@@ -1,0 +1,13 @@
+include README_PYPI.md
+include LICENSE
+include pyproject.toml
+
+include interia_menu.py
+include interia_doctor.py
+include README_interia_quality.md
+include README_interia_quality_quickstart.md
+include AI_TOUR.md
+include AI_BRIDGE.md
+
+recursive-include interia_quality/board *.html *.js *.css
+recursive-include interia_quality/board/docs *.*

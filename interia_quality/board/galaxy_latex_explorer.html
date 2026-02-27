@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>InterIA – LaTeX Galaxy Explorer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link id="favicon" rel="icon" href="">
+
+</head>
+<body>
+
+<h1>InterIA – LaTeX Galaxy Explorer</h1>
+<div id="summary">Loading galaxy data…</div>
+
+<canvas id="canvas" width="1000" height="700"></canvas>
+
+<div class="sidebar">
+  <h2>Legend</h2>
+  <p><b>Position:</b> X = sections, Y = labels</p>
+  <p><b>Size:</b> macro usage</p>
+  <p><b>Color:</b> score (blue = low, purple = high)</p>
+  <hr>
+  <p id="hover-info">Hover a file…</p>
+</div>
+<!-- Mini Init to Common board JS: add style, favicon, top-bar menus, light/dark switch ... -->
+<script>
+// hide without style (plank loader)
+document.body.style='display:none';
+// Init global vars
+iia_page  = location.pathname.substring(location.pathname.lastIndexOf('/') + 1),
+base_href = (iia_page == 'index.html' ? '../../' : ''), // Only docs/quality have index.html (wip)
+board_js  = base_href + 'js/board.js';
+// Add Board (js) in head
+script     = document.createElement('script');
+script.src = base_href + 'js/board.js';
+document.head.appendChild(script);
+</script>
+
+<script src="js/galaxy_latex_explorer.js"></script>
+
+</body>
+</html>

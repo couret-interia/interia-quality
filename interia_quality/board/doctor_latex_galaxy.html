@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>InterIA – LaTeX Galaxy Map</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link id="favicon" rel="icon" href="">
+
+</head>
+<body>
+
+<h1>InterIA – LaTeX Galaxy Map</h1>
+<div id="summary">Loading latex_galaxy.json…</div>
+<div class="container" id="content"></div>
+<!-- Mini Init to Common board JS: add style, favicon, top-bar menus, light/dark switch ... -->
+<script>
+// hide without style (plank loader)
+document.body.style='display:none';
+// Init global vars
+iia_page  = location.pathname.substring(location.pathname.lastIndexOf('/') + 1),
+base_href = (iia_page == 'index.html' ? '../../' : ''), // Only docs/quality have index.html (wip)
+board_js  = base_href + 'js/board.js';
+// Add Board (js) in head
+script     = document.createElement('script');
+script.src = base_href + 'js/board.js';
+document.head.appendChild(script);
+</script>
+
+<script>
+async function main() {
+  const summary = document.getElementById("summary");
+  const container = document.getElementById("content");
+
+  let data;
+  try {
+    const res = await fetch(BASE_URL + "latex_galaxy.json", {cache: "no-store"});
+    if (!res.ok) {
+      summary.textContent = "❌ Could not load latex_galaxy.json. Run `latex-galaxy` first.";
+      return;
+    }
+    data = await res.json();
+  } catch (e) {
+    summary.textContent = "Error loading latex_galaxy.json.";
+    return;
+  }
+
+  const files = data.files || {};
+  const agg = data.aggregates || {};
+
+  const totalFiles = agg.total_files || Object.keys(files).length || 0;
+  const totalLabels = agg.total_labels || 0;
+  const totalCites = agg.total_citations || 0;
+
+  summary.textContent =
+    `Files: ${totalFiles} · Labels: ${totalLabels} · Citations: ${totalCites}`;
+
+  if (!Object.keys(files).length) {
+    container.innerHTML = "<p>No .tex files found in this repository.</p>";
+    return;
+  }
+
+  // Tri par score décroissant
+  const entries = Object.entries(files).sort((a,b) => b[1].score - a[1].score);
+  const maxScore = entries.reduce((m, [, stats]) => Math.max(m, stats.score || 0), 1) || 1;
+
+  container.innerHTML = "";
+  for (const [fname, stats] of entries) {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const score = stats.score || 0;
+    const density = stats.label_density || 0;
+    const macroRatio = stats.macro_usage_ratio || 0;
+    const citeDensity = stats.citation_density || 0;
+
+    // header
+    const header = document.createElement("div");
+    header.className = "card-header";
+    header.innerHTML = `
+      <h2>${fname}</h2>
+      <div class="score">score = ${score.toFixed(3)}</div>
+    `;
+    card.appendChild(header);
+
+    // bar
+    const barBg = document.createElement("div");
+    barBg.className = "bar-bg";
+    const barFill = document.createElement("div");
+    barFill.className = "bar-fill";
+    const width = Math.max(5, (score / maxScore) * 100);
+    barFill.style.width = width + "%";
+    barBg.appendChild(barFill);
+    card.appendChild(barBg);
+
+    // stats badges
+    const statsDiv = document.createElement("div");
+    statsDiv.className = "stats";
+    statsDiv.innerHTML = `
+      <div class="badge"><span>sections</span> ${stats.sections}</div>
+      <div class="badge"><span>subsections</span> ${stats.subsections}</div>
+      <div class="badge"><span>subsubsections</span> ${stats.subsubsections}</div>
+      <div class="badge"><span>labels</span> ${stats.labels}</div>
+      <div class="badge"><span>macros</span> ${stats.macros_defined} def / ${stats.macros_used_total} use</div>
+      <div class="badge"><span>citations</span> ${stats.citations_total} total / ${stats.citations_unique} unique</div>
+      <div class="badge"><span>labels/struct</span> ${density.toFixed(3)}</div>
+      <div class="badge"><span>macro ratio</span> ${macroRatio.toFixed(3)}</div>
+      <div class="badge"><span>cite density</span> ${citeDensity.toFixed(3)}</div>
+    `;
+    card.appendChild(statsDiv);
+
+    // citation keys (limités)
+    const keys = stats.citation_keys || [];
+    if (keys.length) {
+      const keysDiv = document.createElement("div");
+      keysDiv.className = "keys";
+      const displayKeys = keys.slice(0, 10);
+      keysDiv.innerHTML = `
+        Citation keys (first ${displayKeys.length}${keys.length > 10 ? " of " + keys.length : ""}):
+        ${displayKeys.map(k => `<code>${k}</code>`).join(" ")}
+      `;
+      card.appendChild(keysDiv);
+    }
+
+    container.appendChild(card);
+  }
+}
+
+// board.js call main();
+</script>
+
+</body>
+</html>

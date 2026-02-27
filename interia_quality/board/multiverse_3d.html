@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>InterIA – Multiverse 3D Explorer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link id="favicon" rel="icon" href="">
+
+</head>
+<body>
+
+<h1>InterIA – Multiverse 3D Explorer</h1>
+<div id="info">Loading multiverse…</div>
+<canvas id="canvas" width="1000" height="700"></canvas>
+<!-- Mini Init to Common board JS: add style, favicon, top-bar menus, light/dark switch ... -->
+<script>
+// hide without style (plank loader)
+document.body.style='display:none';
+// Init global vars
+iia_page  = location.pathname.substring(location.pathname.lastIndexOf('/') + 1),
+base_href = (iia_page == 'index.html' ? '../../' : ''), // Only docs/quality have index.html (wip)
+board_js  = base_href + 'js/board.js';
+// Add Board (js) in head
+script     = document.createElement('script');
+script.src = base_href + 'js/board.js';
+document.head.appendChild(script);
+</script>
+
+<script>
+function rand(min,max) { return min + Math.random()*(max-min); }
+
+async function main() {
+  let data;
+  try {
+    data = await loadJSON("interia_multiverse_3d.json");
+  } catch {
+    document.getElementById("info").textContent = "interia_multiverse_3d.json missing.";
+    return;
+  }
+
+  const nodes = data.nodes;
+  const infoBox = document.getElementById("info");
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+
+  // Initialize 3D coordinates
+  for (const n of nodes) {
+    n.x = rand(-200,200);
+    n.y = rand(-200,200);
+    n.z = rand(-200,200);
+    n.vx = n.vy = n.vz = 0;
+  }
+
+  // Physics parameters
+  const repulsion = 4000;
+  const attraction = 0.02;
+  const damping = 0.85;
+
+  function stepPhysics() {
+    // Forces: repulsion + attraction via distance matrix
+    for (const a of nodes) {
+      for (const b of nodes) {
+        if (a === b) continue;
+
+        const dx = a.x - b.x;
+        const dy = a.y - b.y;
+        const dz = a.z - b.z;
+        let dist = Math.sqrt(dx*dx + dy*dy + dz*dz) + 0.001;
+
+        // repulsion
+        const F_rep = repulsion / (dist*dist);
+        a.vx += (dx/dist) * F_rep * 0.01;
+        a.vy += (dy/dist) * F_rep * 0.01;
+        a.vz += (dz/dist) * F_rep * 0.01;
+      }
+    }
+
+    // Attraction via distance values
+    for (const a of nodes) {
+      for (const link of a.links) {
+        const b = nodes.find(n => n.name === link.target);
+        if (!b) continue;
+
+        const targetDist = 40 + link.distance * 5;
+
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+        const dz = b.z - a.z;
+        const dist = Math.sqrt(dx*dx + dy*dy + dz*dz) + 0.001;
+
+        const G = link.gravity || (1/(1+link.distance));
+//      const F_attr = (dist - targetDist) * attraction;      // without gravity (initialy)
+        const F_attr = (dist - targetDist) * attraction * G;  // with gravity
+
+        a.vx += (dx/dist)*F_attr;
+        a.vy += (dy/dist)*F_attr;
+        a.vz += (dz/dist)*F_attr;
+      }
+    }
+
+    // Apply velocities + damping
+    for (const n of nodes) {
+      n.x += n.vx;
+      n.y += n.vy;
+      n.z += n.vz;
+      n.vx *= damping;
+      n.vy *= damping;
+      n.vz *= damping;
+    }
+  }
+
+  // Camera + projection
+  let camZ = 600;
+
+  canvas.addEventListener("wheel", e => {
+    camZ += e.deltaY * 0.5;
+    if (camZ < 200) camZ = 200;
+    if (camZ > 2000) camZ = 2000;
+  });
+
+  function project(x,y,z) {
+    const scale = camZ / (camZ - z);
+    return {
+      x: canvas.width/2 + x*scale,
+      y: canvas.height/2 + y*scale,
+      r: scale
+    };
+  }
+
+  function draw() {
+    ctx.fillStyle = "#0D1117";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    let hovered = null;
+
+    for (const n of nodes) {
+      const p = project(n.x,n.y,n.z);
+      const r = Math.max(4, Math.sqrt(n.score)*3 * p.r);
+      n._px = p.x;
+      n._py = p.y;
+      n._pr = r;
+
+      ctx.beginPath();
+      ctx.fillStyle = `rgb(${100+n.score*60},${80+n.score*20},${255-n.score*120})`;
+      ctx.arc(p.x, p.y, r, 0, Math.PI*2);
+      ctx.fill();
+    }
+
+    // hover detection
+    canvas.onmousemove = e => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+
+      hovered = null;
+      for (const n of nodes) {
+        const dx = mx - n._px;
+        const dy = my - n._py;
+        if (dx*dx + dy*dy <= n._pr*n._pr) {
+          hovered = n;
+          break;
+        }
+      }
+
+      if (hovered) {
+        infoBox.innerHTML = `
+          <b>${hovered.name}</b><br>
+          Star Score: ${hovered.score}<br>
+          Links: ${hovered.links.length}<br>
+        `;
+      } else {
+        infoBox.textContent = "Hover a galaxy…";
+      }
+    };
+  }
+
+  function loop() {
+    stepPhysics();
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  infoBox.textContent = "Multiverse loaded — hover stars.";
+  loop();
+}
+
+// board.js call main();
+</script>
+
+</body>
+</html>

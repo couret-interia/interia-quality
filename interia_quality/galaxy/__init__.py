@@ -1,0 +1,1 @@
+"""InterIA Quality v4 – Galaxy subsystem."""

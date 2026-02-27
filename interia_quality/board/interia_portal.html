@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>InterIA – Suite Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link id="favicon" rel="icon" href="">
+
+</head>
+<body>
+
+<h1>InterIA – Suite Portal</h1>
+<div id="summary">
+  Modular quality engine · refactor assist · AI bridge · structure maps for scientific repos
+</div>
+
+<div class="grid">
+
+  <!-- 🧪 QUALITY REPORT -->
+  <div class="card">
+    <h2>🧪 Quality Report</h2>
+    <p>
+      Run all quality plugins (Python, Markdown, LaTeX, BibTeX) and get a JSON report
+      for this repository.
+    </p>
+    <p>
+      <a href="quality_report.html" title="🧪 Quality Report">Open <code>quality_report.html</code></a>
+    </p>
+    <p class="small">
+      CLI:
+      <code>interia-quality</code> or <code>interia-quality check</code><br>
+      Makefile:
+      <code>make quality</code> · <code>make quality-all</code>
+    </p>
+  </div>
+
+  <!-- 🤖 REFACTOR ASSIST (AI BRIDGE) -->
+  <div class="card">
+    <h2>🤖 Refactor Assist (AI Bridge)</h2>
+    <p>
+      Build a refactor plan, generate an AI request, review the response and
+      apply edits – all via JSON files.
+    </p>
+    <p>
+      <a href="ai_preview.html" title="🤖 Refactor Assist (AI Bridge)">Open <code>ai_preview.html</code></a>
+    </p>
+    <p class="small">
+      CLI:
+      <code>interia-quality refactor-plan</code><br>
+      <code>interia-quality ai-request</code> · <code>ai-prompt</code> ·
+      <code>ai-summary</code> · <code>ai-apply</code><br>
+      Makefile:
+      <code>make refactor-plan</code> · <code>make ai-request</code> ·
+      <code>make ai-prompt</code> · <code>make ai-summary</code> · <code>make ai-apply</code> ·
+      <code>make ai-preview</code>
+    </p>
+  </div>
+
+  <!-- 🔭 LATEX GALAXY EXPLORER -->
+  <div class="card">
+    <h2>🔭 LaTeX Galaxy Explorer</h2>
+    <p>
+      Explore LaTeX structure (sections, labels, macros) as a navigable galaxy.
+    </p>
+    <p>
+      <a href="galaxy_latex_explorer.html" title="🔭 LaTeX Galaxy Explorer">Open <code>galaxy_latex_explorer.html</code></a>
+    </p>
+    <p class="small">
+      CLI:
+      <code>interia-quality latex-explorer</code><br>
+      Makefile:
+      <code>make latex-explorer</code> → <code>make latex-explorer-html</code>
+    </p>
+  </div>
+
+  <!-- 🌌 LATEX GALAXY -->
+  <div class="card">
+    <h2>🌌 LaTeX Galaxy</h2>
+    <p>
+      Build a LaTeX Galaxy Map of all sections, labels and macros across this repo.
+    </p>
+    <p>
+      <a href="doctor_latex_galaxy.html" title="🌌 LaTeX Galaxy">Open <code>doctor_latex_galaxy.html</code></a>
+    </p>
+    <p class="small">
+      CLI:
+      <code>interia-quality latex-galaxy</code><br>
+      Makefile:
+      <code>make latex-galaxy</code> → <code>make latex-galaxy-html</code>
+    </p>
+  </div>
+
+  <!-- 💫 BIBTEX GALAXY -->
+  <div class="card">
+    <h2>💫 BibTeX Galaxy</h2>
+    <p>
+      Map BibTeX entries, citations, missing and unused references as a galaxy.
+    </p>
+    <p>
+      <a href="bib_galaxy.html" title="💫 BibTeX Galaxy">Open <code>bib_galaxy.html</code></a>
+    </p>
+    <p class="small">
+      CLI:
+      <code>interia-quality bib-galaxy</code><br>
+      Makefile:
+      <code>make bib-galaxy</code> → <code>make bib-galaxy-html</code>
+    </p>
+  </div>
+
+  <!-- 🌐 COSMOS MAP -->
+  <div class="card">
+    <h2>🌐 Cosmos Map</h2>
+    <p>
+      Build a unified structural map that merges Python, Markdown, LaTeX and BibTeX
+      signals into a single JSON.
+    </p>
+    <p>
+      <a href="cosmos_explorer.html" title="🌐 Cosmos Map">Open <code>cosmos_explorer.html</code></a>
+    </p>
+    <p class="small">
+      CLI:
+      <code>interia-quality cosmos-map</code><br>
+      Makefile:
+      <code>make cosmos-map</code> → <code>make cosmos-map-html</code>
+    </p>
+  </div>
+
+  <!-- ⏳ COSMOS TIMELINE -->
+  <div class="card">
+    <h2>⏳ Cosmos Timeline</h2>
+    <p>
+      Record snapshots of the Cosmos Map over time and visualise the evolution
+      of coherence and structure.
+    </p>
+    <p>
+      <a href="cosmos_timeline.html" title="⏳ Cosmos Timeline">Open <code>cosmos_timeline.html</code></a>
+    </p>
+    <p class="small">
+      CLI:
+      <code>interia-quality cosmos-timelapse</code><br>
+      Makefile:
+      <code>make cosmos-timeline</code> → <code>make cosmos-timeline-html</code>
+    </p>
+  </div>
+
+  <!-- 🌠 MULTIVERSE 3D -->
+  <div class="card">
+    <h2>🌠 Multiverse 3D</h2>
+    <p>
+      Analyse several repositories together and explore their distances,
+      gravity and thematic bridges in 3D.
+    </p>
+    <p>
+      <a href="multiverse_3d.html" title="🌠 Multiverse 3D">Open <code>multiverse_3d.html</code></a>
+    </p>
+    <p class="small">
+      Makefile (in a multiverse root):<br>
+      <code>make multiverse-map repos="../repo1 ../repo2 ..."</code><br>
+      <code>make multiverse-gravity</code> · <code>make multiverse-cli</code><br>
+      <code>make multiverse-bridges</code><br>
+      <code>make multiverse-3d</code> → <code>make multiverse-3d-html repos="..."</code><br>
+      <span class="meta">Nb: run <code>make cosmos-map</code> inside each repo beforehand.</span>
+    </p>
+  </div>
+
+  <!-- ❓ QUALITY DOCS &AMP; HELP -->
+  <div class="card">
+    <h2>❓ Quality Docs &amp; Help</h2>
+    <p>
+      Learn what the InterIA Quality Pack v4 does, how the CLI works,
+      and how to use the Makefile targets.
+    </p>
+    <p>
+      <a href="docs/quality/index.html" title="❓ Quality Docs &amp; Help">Open <code>docs/quality/index.html</code></a>
+    </p>
+    <p class="small">
+      CLI:
+      <code>interia-quality --help</code><br>
+      Makefile:
+      <code>make quality-help</code><br>
+      Portal:
+      <code>interia-quality init-board</code> · <code>interia-quality portal</code><br>
+      🔗 Suite overview:
+      <a href="https://github.com/couret-interia/interia-suite/blob/main/INTERIA_SUITE.md">
+        <code>INTERIA_SUITE.md</code>
+      </a>
+    </p>
+  </div>
+</div>
+<!-- Mini Init to Common board JS: add style, favicon, top-bar menus, light/dark switch ... -->
+<script>
+// hide without style (plank loader)
+document.body.style='display:none';
+// Init global vars
+iia_page  = location.pathname.substring(location.pathname.lastIndexOf('/') + 1),
+base_href = (iia_page == 'index.html' ? '../../' : ''), // Only docs/quality have index.html (wip)
+board_js  = base_href + 'js/board.js';
+// Add Board (js) in head
+script     = document.createElement('script');
+script.src = base_href + 'js/board.js';
+document.head.appendChild(script);
+</script>
+
+<div class="footer">
+  InterIA Suite – One portal to see them all.
+</div>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>InterIA Quality Report v4</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link id="favicon" rel="icon" href="">
+
+</head>
+<body>
+<h1>InterIA Quality Report v4</h1>
+<div class="container" id="content">
+  <p>Loading <code>quality_report.json</code>…</p>
+</div>
+<!-- Mini Init to Common board JS: add style, favicon, top-bar menus, light/dark switch ... -->
+<script>
+// hide without style (plank loader)
+document.body.style='display:none';
+// Init global vars
+iia_page  = location.pathname.substring(location.pathname.lastIndexOf('/') + 1),
+base_href = (iia_page == 'index.html' ? '../../' : ''), // Only docs/quality have index.html (wip)
+board_js  = base_href + 'js/board.js';
+// Add Board (js) in head
+script     = document.createElement('script');
+script.src = base_href + 'js/board.js';
+document.head.appendChild(script);
+</script>
+
+<script>
+async function main() {
+  const container = document.getElementById("content");
+
+  let data;
+  try {
+    const res = await fetch(BASE_URL + "quality_report.json", {cache: "no-store"});
+    if (!res.ok) {
+      container.innerHTML = '<div id="summary">Could not load <code>quality_report.json</code>. Run `python interia-quality` or `make quality` first.</div>';
+      return;
+    }
+    data = await res.json();
+  } catch (e) {
+    container.innerHTML = '<div id="summary">Error while reading <code>quality_report.json</code>.</div>';
+    return;
+  }
+
+  if (!data) {
+    container.innerHTML = '<div id="summary">No data in <code>quality_report.json</code>.</div>';
+    return;
+  }
+
+  container.innerHTML = "";
+
+  let html = "";
+  for (const key in data) {
+    const ok = data[key].ok,
+      issues = data[key].issues;
+
+    html += `
+      <div class="card">
+        <h2>${key}</h2>
+        <p class="${ok ? 'ok' : 'fail'}">
+          ${ok ? "✔ Passed" : "✖ Issues found"}
+        </p>`;
+    if (!ok) {
+      let dtls = ''
+        tot = 0;
+      issues.forEach((fileIssues, idx) => {
+        // chktex extract (other probably ok)
+        fileIssues.split('^\n').forEach((issue, idx) => {
+          tot++;
+          dtls += `
+          <pre>${escapeHtml(issue)}</pre>`;
+        });
+      });
+      html += `
+        <details>
+          <summary>${tot} Issues</summary>${dtls}
+        </details>`;
+    }
+
+    html += `
+      </div>`;
+  }
+
+  container.innerHTML = html;
+}
+
+// board.js call main();
+</script>
+</body>
+</html>

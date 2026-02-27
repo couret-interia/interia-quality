@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>InterIA Quality Pack v4 – Overview</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link id="favicon" rel="icon" href="">
+
+</head>
+<body>
+
+<h1>🧪 InterIA Quality Pack v4</h1>
+
+<div class="container">
+
+<form class="iia-lang-toggle">
+<input class="tog" type="radio" id="toggle-fr" name="toggle">
+<label class="tog" for="toggle-fr">🇫🇷</label>
+<input class="tog" type="radio" id="toggle-en" name="toggle" checked>
+<label class="tog" for="toggle-en">🇬🇧</label>
+<div class="toggle">
+
+<!-- 🇫🇷 Vue FR -->
+<div class="toggle-fr">
+
+        <div id="summary">
+          Moteur qualité modulaire · aide au maintien · pont IA · cartes de structure pour dépôts scientifiques
+        </div>
+
+        <!-- 💠 Qu'est-ce que c'est ? -->
+        <div class="card">
+          <h2>💠 Qu’est‑ce que InterIA Quality Pack v4 ?</h2>
+          <p>
+            <code>interia-quality</code> est le paquet Python autonome derrière
+            le <strong>InterIA Quality Pack v4</strong>.
+          </p>
+          <p>Il fournit :</p>
+          <ul>
+            <li>des contrôles qualité modulaires (Python, Markdown, LaTeX, BibTeX),</li>
+            <li>un pipeline d’analyse <strong>JSON‑first</strong> (rapports, plans de refactor, chronologie),</li>
+            <li>un <strong>Pont IA</strong> agnostique (AI Bridge) pour une aide à la refonte en toute sécurité,</li>
+            <li>des galaxies LaTeX &amp; BibTeX pour les documents scientifiques,</li>
+            <li>une <strong>Cosmos Map</strong> &amp; une timeline documentaire pour le dépôt entier,</li>
+            <li>des tableaux de bord HTML (portail, rapport qualité, cosmos, galaxies).</li>
+          </ul>
+          <p class="small">
+            Toutes les commandes opèrent sur le <strong>répertoire courant</strong> et
+            supposent que vous êtes à la racine du projet.
+          </p>
+        </div>
+
+        <!-- 🚀 Démarrage rapide -->
+        <div class="card">
+          <h2>🚀 Démarrage rapide (CLI)</h2>
+          <p>Une fois installé (via <code>pip install interia-quality</code>) :</p>
+          <pre><code># depuis la racine de votre projet
+interia-quality          # lance tous les checks qualité (défaut)
+interia-quality check    # équivalent
+</code></pre>
+          <p>Cela exécute tous les plugins qualité et écrit <code>quality_report.json</code>.</p>
+
+          <p>Commandes principales :</p>
+          <ul>
+            <li><code>interia-quality</code> / <code>check</code> – exécute les checks et écrit <code>quality_report.json</code></li>
+            <li><code>refactor-plan</code> – génère <code>refactor_plan.json</code> + <code>refactor_plan.md</code></li>
+            <li><code>refactor-apply</code> – applique des refactors sûrs (docstrings automatiques, petites améliorations)</li>
+            <li><code>cosmos-map</code> – construit <code>cosmos_map.json</code> + <code>cosmos_map_summary.json</code></li>
+            <li><code>cosmos-timelapse</code> – met à jour <code>cosmos_history/</code> + <code>cosmos_timeline.json</code></li>
+            <li><code>latex-galaxy</code> – génère <code>latex_galaxy.json</code></li>
+            <li><code>latex-explorer</code> – génère <code>latex_explorer.json</code></li>
+            <li><code>bib-galaxy</code> – génère <code>bib_galaxy.json</code></li>
+            <li><code>init-board</code> – copie le board HTML/CSS/JS dans <code>./interia_quality/board</code></li>
+            <li><code>portal</code> – démarre un serveur HTTP local et ouvre le portail InterIA</li>
+          </ul>
+        </div>
+
+        <!-- 🤖 Pont IA -->
+        <div class="card">
+          <h2>🤖 Refactor Assist – flux du Pont IA</h2>
+          <p>
+            Le Pont IA coordonne les suggestions de refactor avec des LLM externes
+            via des fichiers JSON. Il est <strong>agnostique</strong> (aucun fournisseur imposé).
+          </p>
+          <ol>
+            <li>
+              Construire le plan de refactor :
+              <pre><code>interia-quality refactor-plan</code></pre>
+              Produit <code>refactor_plan.json</code> et <code>refactor_plan.md</code>.
+            </li>
+            <li>
+              Construire la requête IA :
+              <pre><code>interia-quality ai-request</code></pre>
+              Produit <code>ai_request.json</code>.
+            </li>
+            <li>
+              Option : générer un prompt prêt à coller dans un LLM :
+              <pre><code>interia-quality ai-prompt</code></pre>
+              Produit <code>ai_prompt.txt</code>.
+            </li>
+            <li>
+              Envoyer <code>ai_request.json</code> ou <code>ai_prompt.txt</code>
+              à votre LLM préféré (ChatGPT, Claude, Gemini, …) et enregistrer la réponse
+              dans <code>ai_response.json</code> à la racine du dépôt.
+            </li>
+            <li>
+              Résumer la réponse :
+              <pre><code>interia-quality ai-summary</code></pre>
+            </li>
+            <li>
+              Prévisualiser et appliquer les modifications :
+              <ul>
+                <li>
+                  via le board : <code>ai_preview.html</code> (voir carte correspondante),
+                </li>
+                <li>
+                  via la CLI :
+                  <pre><code>interia-quality ai-apply</code></pre>
+                  Applique les modifications jugées sûres (avec sauvegardes).
+                </li>
+              </ul>
+            </li>
+          </ol>
+          <p class="small">
+            Tous les fichiers intermédiaires sont en JSON et lisibles :
+            <code>refactor_plan.json</code>, <code>ai_request.json</code>,
+            <code>ai_response.json</code>.
+          </p>
+        </div>
+
+        <!-- 🌐 Cosmos & Galaxies -->
+        <div class="card">
+          <h2>🌐 Cosmos, Galaxies &amp; Multivers</h2>
+          <p>
+            Au‑delà de la qualité, la suite offre des vues structurelles à plus grande échelle :
+          </p>
+          <ul>
+            <li>
+              <strong>Cosmos Map</strong> –
+              fusionne les signaux Python / Markdown / LaTeX / BibTeX dans
+              <code>cosmos_map.json</code> + <code>cosmos_map_summary.json</code><br>
+              CLI : <code>interia-quality cosmos-map</code><br>
+              Makefile : <code>make cosmos-map</code> → <code>make cosmos-map-html</code>
+            </li>
+            <li>
+              <strong>Cosmos Timeline</strong> –
+              enregistre des snapshots dans <code>cosmos_history/</code> et suit l’évolution
+              de la cohérence et de la structure dans le temps.<br>
+              CLI : <code>interia-quality cosmos-timelapse</code><br>
+              Makefile : <code>make cosmos-timeline</code> → <code>make cosmos-timeline-html</code>
+            </li>
+            <li>
+              <strong>LaTeX Galaxy</strong> –
+              cartographie des sections, labels et macros sur tous les fichiers <code>.tex</code>
+              dans <code>latex_galaxy.json</code>.<br>
+              CLI : <code>interia-quality latex-galaxy</code><br>
+              Makefile : <code>make latex-galaxy</code> → <code>make latex-galaxy-html</code>
+            </li>
+            <li>
+              <strong>LaTeX Explorer</strong> –
+              carte de structure LaTeX enrichie dans <code>latex_explorer.json</code>.<br>
+              CLI : <code>interia-quality latex-explorer</code><br>
+              Makefile : <code>make latex-explorer</code> → <code>make latex-explorer-html</code>
+            </li>
+            <li>
+              <strong>Galaxie BibTeX</strong> –
+              analyse des fichiers <code>.bib</code> + <code>.tex</code>
+              et produit <code>bib_galaxy.json</code>
+              (références citées / manquantes / inutilisées).<br>
+              CLI : <code>interia-quality bib-galaxy</code><br>
+              Makefile : <code>make bib-galaxy</code> → <code>make bib-galaxy-html</code>
+            </li>
+            <li>
+              <strong>Multivers (multi‑dépôts)</strong> –
+              à lancer depuis un dépôt “multiverse root” avec un Makefile :<br>
+              <code>make multiverse-map repos="../repoA ../repoB ..."</code><br>
+              <code>make multiverse-gravity</code> · <code>make multiverse-cli</code><br>
+              <code>make multiverse-bridges</code><br>
+              <code>make multiverse-3d</code> → <code>make multiverse-3d-html repos="..."</code><br>
+              <span class="meta">
+                NB : exécuter <code>make cosmos-map</code> dans chaque dépôt avant.
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 📡 Portail & board -->
+        <div class="card">
+          <h2>📡 Portail InterIA &amp; board</h2>
+          <p>
+            Le board est la face visuelle de la suite : rapport qualité, prévisualisation des refactors,
+            galaxies, Cosmos, Multivers – le tout dans un seul portail.
+          </p>
+
+          <p><strong>1. Installer le board (une fois par dépôt) :</strong></p>
+          <pre><code>cd /chemin/vers/votre/depot
+interia-quality init-board
+</code></pre>
+
+          <p><strong>2. Ouvrir le portail via la CLI :</strong></p>
+          <pre><code>interia-quality portal</code></pre>
+
+          <p>Cela démarre un serveur local sur <code>http://127.0.0.1:8000</code>
+          et ouvre le portail InterIA :</p>
+          <p>
+            <a href="../../interia_portal.html">Ouvrir <code>interia_portal.html</code></a>
+          </p>
+
+          <p><strong>3. Ou via les cibles Makefile (mode “vendored”) :</strong></p>
+          <ul>
+            <li><code>make portal-all</code> – analyse minimale + ouverture du portail</li>
+            <li><code>make portal-html</code> – ouvre le portail (serveur + navigateur)</li>
+            <li><code>make quality-serve</code> – ouvre <code>quality_report.html</code></li>
+            <li><code>make ai-preview</code> – ouvre <code>ai_preview.html</code></li>
+          </ul>
+
+          <p class="small">
+            Depuis le portail, vous pouvez naviguer vers :
+            <code>quality_report.html</code>,
+            <code>ai_preview.html</code>,
+            <code>cosmos_explorer.html</code>,
+            <code>cosmos_timeline.html</code>,
+            <code>galaxy_latex_explorer.html</code>,
+            <code>doctor_latex_galaxy.html</code>,
+            <code>bib_galaxy.html</code>,
+            <code>multiverse_3d.html</code>, etc.
+          </p>
+        </div>
+
+        <!-- 📜 Principes -->
+        <div class="card">
+          <h2>📜 Principes de conception</h2>
+          <ul>
+            <li><strong>JSON‑first</strong> – chaque analyse produit du JSON diffable et scriptable.</li>
+            <li><strong>IA‑agnostique</strong> – le Pont IA définit des formats de fichiers, pas des fournisseurs.</li>
+            <li><strong>Humain dans la boucle</strong> – plans de refactor et réponses IA toujours inspectables.</li>
+            <li><strong>Application sûre</strong> – sauvegardes et vérifications de base avant d’écrire.</li>
+            <li><strong>Fonctionne hors‑ligne</strong> – tout est local, sauf l’appel à l’IA externe.</li>
+            <li><strong>Un seul portail</strong> – <em>InterIA Suite – one portal to see them all.</em></li>
+          </ul>
+        </div>
+
+        <div class="footer">
+          Fait avec 💖 par l'équipe InterIA – La qualité comme clarté, la refactorisation comme générosité.
+        </div>
+
+
+</div><!-- /toggle-fr -->
+
+<!-- 🇬🇧 View EN -->
+<div class="toggle-en">
+
+        <div id="summary">
+          Modular quality engine · refactor assist · AI bridge · structure maps for scientific repos
+        </div>
+
+        <!-- 💠 What is it? -->
+        <div class="card">
+          <h2>💠 What is InterIA Quality Pack v4?</h2>
+          <p>
+            <code>interia-quality</code> is the standalone Python package behind
+            the <strong>InterIA Quality Pack v4</strong>.
+          </p>
+          <p>It provides:</p>
+          <ul>
+            <li>modular quality checks (Python, Markdown, LaTeX, BibTeX),</li>
+            <li>a <strong>JSON‑first</strong> analysis pipeline (reports, refactor plans, timelines),</li>
+            <li>an AI‑agnostic <strong>Bridge</strong> for safe refactor assistance,</li>
+            <li>LaTeX &amp; BibTeX “galaxies” for scientific documents,</li>
+            <li>a <strong>Cosmos Map</strong> and documentary timeline for the whole repo,</li>
+            <li>HTML dashboards (portal, quality report, cosmos, galaxies).</li>
+          </ul>
+          <p class="small">
+            All commands operate on the <strong>current working directory</strong>
+            and expect to be run from the project root.
+          </p>
+        </div>
+
+        <!-- 🚀 Quick start -->
+        <div class="card">
+          <h2>🚀 Quick start (CLI)</h2>
+          <p>Once installed (via <code>pip install interia-quality</code>):</p>
+          <pre><code># from your project root
+interia-quality          # run all quality checks (default)
+interia-quality check    # same as above
+</code></pre>
+          <p>This runs all quality plugins and writes <code>quality_report.json</code>.</p>
+
+          <p>Core CLI commands:</p>
+          <ul>
+            <li><code>interia-quality</code> / <code>check</code> – run checks and write <code>quality_report.json</code></li>
+            <li><code>refactor-plan</code> – write <code>refactor_plan.json</code> + <code>refactor_plan.md</code></li>
+            <li><code>refactor-apply</code> – apply safe refactors (docstring templates, small cleanups)</li>
+            <li><code>cosmos-map</code> – build <code>cosmos_map.json</code> + <code>cosmos_map_summary.json</code></li>
+            <li><code>cosmos-timelapse</code> – update <code>cosmos_history/</code> + <code>cosmos_timeline.json</code></li>
+            <li><code>latex-galaxy</code> – build <code>latex_galaxy.json</code></li>
+            <li><code>latex-explorer</code> – build <code>latex_explorer.json</code></li>
+            <li><code>bib-galaxy</code> – build <code>bib_galaxy.json</code></li>
+            <li><code>init-board</code> – copy board HTML/CSS/JS into <code>./interia_quality/board</code></li>
+            <li><code>portal</code> – start a local HTTP server and open the InterIA portal</li>
+          </ul>
+        </div>
+
+        <!-- 🤖 AI Bridge -->
+        <div class="card">
+          <h2>🤖 Refactor Assist – AI Bridge workflow</h2>
+          <p>
+            The AI Bridge coordinates refactor suggestions with external LLMs
+            via JSON files. It is <strong>AI‑agnostic</strong> (no vendor lock‑in).
+          </p>
+          <ol>
+            <li>
+              Build the refactor plan:
+              <pre><code>interia-quality refactor-plan</code></pre>
+              This writes <code>refactor_plan.json</code> and <code>refactor_plan.md</code>.
+            </li>
+            <li>
+              Build the AI request payload:
+              <pre><code>interia-quality ai-request</code></pre>
+              This writes <code>ai_request.json</code>.
+            </li>
+            <li>
+              Optionally, generate a ready‑to‑paste LLM prompt:
+              <pre><code>interia-quality ai-prompt</code></pre>
+              This writes <code>ai_prompt.txt</code>.
+            </li>
+            <li>
+              Send <code>ai_request.json</code> or <code>ai_prompt.txt</code> to your favourite LLM
+              (ChatGPT, Claude, Gemini, …) and save the answer as
+              <code>ai_response.json</code> at the repo root.
+            </li>
+            <li>
+              Summarise the response:
+              <pre><code>interia-quality ai-summary</code></pre>
+            </li>
+            <li>
+              Preview and apply edits:
+              <ul>
+                <li>
+                  via the board: <code>ai_preview.html</code> (see the corresponding card),
+                </li>
+                <li>
+                  via the CLI:
+                  <pre><code>interia-quality ai-apply</code></pre>
+                  Applies safe edits (with backups).
+                </li>
+              </ul>
+            </li>
+          </ol>
+          <p class="small">
+            All intermediate files are JSON and human‑readable:
+            <code>refactor_plan.json</code>, <code>ai_request.json</code>,
+            <code>ai_response.json</code>.
+          </p>
+        </div>
+
+        <!-- 🌐 Cosmos & Galaxies -->
+        <div class="card">
+          <h2>🌐 Cosmos, Galaxies &amp; Multiverse</h2>
+          <p>
+            Beyond basic quality, the suite offers higher‑level structural views:
+          </p>
+          <ul>
+            <li>
+              <strong>Cosmos Map</strong> –
+              unify Python / Markdown / LaTeX / BibTeX signals into
+              <code>cosmos_map.json</code> + <code>cosmos_map_summary.json</code><br>
+              CLI: <code>interia-quality cosmos-map</code><br>
+              Makefile: <code>make cosmos-map</code> → <code>make cosmos-map-html</code>
+            </li>
+            <li>
+              <strong>Cosmos Timeline</strong> –
+              record snapshots in <code>cosmos_history/</code> and track the evolution
+              of coherence and structure over time.<br>
+              CLI: <code>interia-quality cosmos-timelapse</code><br>
+              Makefile: <code>make cosmos-timeline</code> → <code>make cosmos-timeline-html</code>
+            </li>
+            <li>
+              <strong>LaTeX Galaxy</strong> –
+              map sections, labels and macros across all <code>.tex</code> files
+              into <code>latex_galaxy.json</code>.<br>
+              CLI: <code>interia-quality latex-galaxy</code><br>
+              Makefile: <code>make latex-galaxy</code> → <code>make latex-galaxy-html</code>
+            </li>
+            <li>
+              <strong>LaTeX Explorer</strong> –
+              richer LaTeX structure map in <code>latex_explorer.json</code>.<br>
+              CLI: <code>interia-quality latex-explorer</code><br>
+              Makefile: <code>make latex-explorer</code> → <code>make latex-explorer-html</code>
+            </li>
+            <li>
+              <strong>BibTeX Galaxy</strong> –
+              analyse <code>.bib</code> + <code>.tex</code> and build
+              <code>bib_galaxy.json</code> (cited / missing / unused refs).<br>
+              CLI: <code>interia-quality bib-galaxy</code><br>
+              Makefile: <code>make bib-galaxy</code> → <code>make bib-galaxy-html</code>
+            </li>
+            <li>
+              <strong>Multiverse (multi‑repo)</strong> –
+              run from a multiverse root with a Makefile:<br>
+              <code>make multiverse-map repos="../repoA ../repoB ..."</code><br>
+              <code>make multiverse-gravity</code> · <code>make multiverse-cli</code><br>
+              <code>make multiverse-bridges</code><br>
+              <code>make multiverse-3d</code> → <code>make multiverse-3d-html repos="..."</code><br>
+              <span class="meta">
+                Nb: run <code>make cosmos-map</code> inside each repo beforehand.
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 📡 Portal & board -->
+        <div class="card">
+          <h2>📡 InterIA Portal &amp; board</h2>
+          <p>
+            The board is the visual side of the suite: quality report, refactor preview,
+            galaxies, Cosmos, Multiverse – all in one place.
+          </p>
+
+          <p><strong>1. Install the board assets (once per repo):</strong></p>
+          <pre><code>cd /path/to/your/repo
+interia-quality init-board
+</code></pre>
+
+          <p><strong>2. Open the portal via the CLI:</strong></p>
+          <pre><code>interia-quality portal</code></pre>
+
+          <p>This starts a local server on <code>http://127.0.0.1:8000</code>
+          and opens the InterIA portal:</p>
+          <p>
+            <a href="../../interia_portal.html">Open <code>interia_portal.html</code></a>
+          </p>
+
+          <p><strong>3. Or via Makefile targets (vendored mode):</strong></p>
+          <ul>
+            <li><code>make portal-all</code> – minimal analysis + open the portal</li>
+            <li><code>make portal-html</code> – open the portal (server + browser)</li>
+            <li><code>make quality-serve</code> – open <code>quality_report.html</code></li>
+            <li><code>make ai-preview</code> – open <code>ai_preview.html</code></li>
+          </ul>
+
+          <p class="small">
+            From the portal you can navigate to:
+            <code>quality_report.html</code>,
+            <code>ai_preview.html</code>,
+            <code>cosmos_explorer.html</code>,
+            <code>cosmos_timeline.html</code>,
+            <code>galaxy_latex_explorer.html</code>,
+            <code>doctor_latex_galaxy.html</code>,
+            <code>bib_galaxy.html</code>,
+            <code>multiverse_3d.html</code>, etc.
+          </p>
+        </div>
+
+        <!-- 📜 Design principles -->
+        <div class="card">
+          <h2>📜 Design principles</h2>
+          <ul>
+            <li><strong>JSON‑first</strong> – every analysis produces JSON that is diffable and scriptable.</li>
+            <li><strong>AI‑agnostic</strong> – the AI Bridge only defines file formats, never providers.</li>
+            <li><strong>Human in the loop</strong> – refactor plans and AI edits are always inspectable.</li>
+            <li><strong>Safe application</strong> – backups and basic checks before writing changes.</li>
+            <li><strong>Offline‑friendly</strong> – everything runs locally except the external AI call.</li>
+            <li><strong>One portal</strong> – <em>InterIA Suite – one portal to see them all.</em></li>
+          </ul>
+        </div>
+
+        <div class="footer">
+          Made with 💖 by InterIA – Quality as clarity, refactor as generosity.
+        </div>
+
+
+</div><!-- /toggle-en -->
+
+</div>
+</form>
+<!-- Mini Init to Common board JS: add style, favicon, top-bar menus, light/dark switch ... -->
+<script>
+// hide without style (plank loader)
+document.body.style='display:none';
+// Init global vars
+iia_page  = location.pathname.substring(location.pathname.lastIndexOf('/') + 1),
+base_href = (iia_page == 'index.html' ? '../../' : ''), // Only docs/quality have index.html (wip)
+board_js  = base_href + 'js/board.js';
+// Add Board (js) in head
+script     = document.createElement('script');
+script.src = base_href + 'js/board.js';
+document.head.appendChild(script);
+</script>
+
+</div>
+</body>
+</html>

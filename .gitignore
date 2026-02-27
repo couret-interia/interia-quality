@@ -1,0 +1,52 @@
+# ╔═════════════════════════════════════════════════════════╗
+# ║  InterIA Quality Pack                                   ║
+# ║  .gitignore  ·  version 4.0.0  ·  © 2026 Couret-InterIA ║
+# ╚═════════════════════════════════════════════════════════╝
+
+# ─────────────────────────────
+#  1. Python / pre-commit caches
+# ─────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.mypy_cache/
+.pytest_cache/
+.tox/
+.venv/
+venv/
+*.egg-info/
+dist/
+artifacts/
+
+# ─────────────────────────────
+#  2. OS-specific artefacts
+# ─────────────────────────────
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+Desktop.ini
+
+# ─────────────────────────────
+#  3. Archives and bundles
+# ─────────────────────────────
+*.zip
+*.tar
+*.gz
+*.7z
+
+# ─────────────────────────────
+#  4. Ignore editor backups
+# ─────────────────────────────
+*~
+*.bak
+*.orig
+*.rej
+*.tmp
+
+# ─────────────────────────────
+#  5. Ignore Quality artifacts
+# ─────────────────────────────
+*.interia-ai-backup
+*.ai_server_pid

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>InterIA – COSMOS EXPLORER</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link id="favicon" rel="icon" href="">
+
+</head>
+<body>
+
+<h1>InterIA – COSMOS EXPLORER</h1>
+<div id="summary">Loading cosmos_map.json…</div>
+
+<canvas id="canvas" width="1000" height="700"></canvas>
+
+<div class="sidebar">
+  <h2>Legend</h2>
+  <p><b>X-axis:</b> structural metrics</p>
+  <p><b>Y-axis:</b> semantic density</p>
+  <p><b>Size:</b> importance</p>
+  <p><b>Color:</b> coherence</p>
+  <hr>
+  <div id="info">Hover a star…</div>
+</div>
+<!-- Mini Init to Common board JS: add style, favicon, top-bar menus, light/dark switch ... -->
+<script>
+// hide without style (plank loader)
+document.body.style='display:none';
+// Init global vars
+iia_page  = location.pathname.substring(location.pathname.lastIndexOf('/') + 1),
+base_href = (iia_page == 'index.html' ? '../../' : ''), // Only docs/quality have index.html (wip)
+board_js  = base_href + 'js/board.js';
+// Add Board (js) in head
+script     = document.createElement('script');
+script.src = base_href + 'js/board.js';
+document.head.appendChild(script);
+</script>
+
+<script>
+function colorForValue(v) {
+  const r = Math.floor(100 + v * 155);
+  const g = Math.floor(80 + v * 40);
+  const b = Math.floor(255 - v * 155);
+  return `rgb(${r},${g},${b})`;
+}
+
+async function main() {
+  let cosmos;
+  try {
+    cosmos = await loadJSON("cosmos_map.json");
+  } catch {
+    document.getElementById("summary").textContent = "❌ cosmos_map.json not found. Run `cosmos-map` first.";
+    return;
+  }
+
+  const summary = document.getElementById("summary");
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+
+  summary.textContent =
+    `Cosmic Coherence Index (CCI): ${cosmos.cosmic_coherence_index}`;
+
+  const info = document.getElementById("info");
+
+  const stars = [];
+
+  // Convert multiple galaxies into one starfield
+  function pushStar(name, structure, density, importance, coherence) {
+    stars.push({ name, structure, density, importance, coherence });
+  }
+
+  const py = cosmos.python.issues;
+  const md = cosmos.markdown.issues;
+  const latex = cosmos.latex.files;
+  const bib = cosmos.bibtex;
+
+  // Python stars
+  if (py.length === 0) {
+    pushStar("python", 1, 1, 20, 1);
+  } else {
+    pushStar("python", 1, 0.2, 10 + py.length, 0.3);
+  }
+
+  // Markdown
+  if (md.length === 0) {
+    pushStar("markdown", 0.8, 0.9, 18, 1);
+  } else {
+    pushStar("markdown", 0.8, 0.3, 10 + md.length, 0.4);
+  }
+
+  // LaTeX files
+  for (const [fname, stats] of Object.entries(latex)) {
+    const structure =
+      0.5 * (stats.sections + stats.subsections + stats.subsubsections);
+    const density = stats.label_density + stats.citation_density;
+    const importance = stats.macros_used_total + stats.labels + stats.citations_total;
+    const coherence = stats.score;
+
+    pushStar(fname, structure, density, importance, coherence);
+  }
+
+  // BibTeX galaxy
+  pushStar(
+    "bibtex",
+    0.6,
+    bib.citation_density,
+    10 + bib.unique_citations.length,
+    bib.completeness
+  );
+
+  // Normalize structure/density
+  const maxStruct = Math.max(...stars.map(s => s.structure), 1);
+  const maxDensity = Math.max(...stars.map(s => s.density), 1);
+
+  for (const s of stars) {
+    s.x = (s.structure / maxStruct) * (canvas.width - 60) + 30;
+    s.y = canvas.height - ((s.density / maxDensity) * (canvas.height - 60) + 30);
+    s.radius = Math.max(4, Math.sqrt(s.importance));
+  }
+
+  function render() {
+    ctx.fillStyle = "#11141A";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    for (const s of stars) {
+      ctx.beginPath();
+      ctx.fillStyle = colorForValue(s.coherence);
+      ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  render();
+
+  canvas.addEventListener("mousemove", e => {
+    const r = canvas.getBoundingClientRect();
+    const mx = e.clientX - r.left;
+    const my = e.clientY - r.top;
+
+    for (const s of stars) {
+      const dx = mx - s.x;
+      const dy = my - s.y;
+      if (dx*dx + dy*dy <= s.radius*s.radius) {
+        info.innerHTML = `
+          <b>${s.name}</b><br>
+          structure=${s.structure.toFixed(2)}<br>
+          density=${s.density.toFixed(2)}<br>
+          importance=${s.importance}<br>
+          coherence=${s.coherence}<br>
+        `;
+        return;
+      }
+    }
+    info.textContent = "Hover a star…";
+  });
+}
+
+// board.js call main();
+</script>
+
+</body>
+</html>

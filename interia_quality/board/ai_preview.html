@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta id="init" itemprop="init" content="tools.module">
+<title>InterIA AI Preview</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link id="favicon" rel="icon" href="">
+
+</head>
+<body class="iia-preview">
+
+<h1>InterIA AI Preview</h1>
+<div class="container" id="content">
+  <p>Loading <code>ai_response.json</code>…</p>
+</div>
+<!-- Mini Init to Common board JS: add style, favicon, top-bar menus, light/dark switch ... -->
+<script>
+// hide without style (plank loader)
+document.body.style='display:none';
+// Init global vars
+iia_page  = location.pathname.substring(location.pathname.lastIndexOf('/') + 1),
+base_href = (iia_page == 'index.html' ? '../../' : ''), // Only docs/quality have index.html (wip)
+board_js  = base_href + 'js/board.js';
+// Add Board (js) in head
+script     = document.createElement('script');
+script.src = base_href + 'js/board.js';
+document.head.appendChild(script);
+</script>
+
+<script>
+var lastMod = null;
+async function main() {
+  const container = document.getElementById("content");
+
+  let data;
+  try {
+    const res = await fetch(BASE_URL + "ai_response.json", {cache: "no-store"});
+    if (!res.ok) {
+      container.innerHTML = '<div id="summary">Could not load <code>ai_response.json</code>.<br>💡 Run `make ai-request` or `make ai-prompt` first.<br>💠 <b>CLI</b> <i>as same commands name of make</i>, e.g. `python interia-quality ai-prompt`.<br><i>Helpers to paste to AI to get <code>ai_response.json</code> <b>easily</b></i>.</div>';
+      return 1;
+    }
+    data = await res.json();
+    lastMod = res.headers.get('Last-Modified');
+  } catch (e) {
+    container.innerHTML = '<div id="summary">Error while reading <code>ai_response.json</code>.</div>';
+    return 2;
+  }
+
+  const edits = data.edits || [];
+  if (!edits.length) {
+    container.innerHTML = '<div id="summary">No edits found in <code>ai_response.json</code>.</div>';
+    return 3;
+  }
+
+  const templateSnippet = (st, idx, start, snippet) => ''
+    + `<input class="toggler" type="checkbox" id="tog_${st}${idx}" checked="">`
+    + `<label for="tog_${st}${idx}"><h3>${st} snippet</h3></label>`
+    + `<pre class="iiasrc" id="${st}_snippet${idx}" data-id="${idx}" data-ln-start-from="${start}">${escapeHtml(snippet)}</pre>`
+    + '';
+
+/* input class="toggler custom" and label class="custom" to add `<span>Hide</span><span>Show</span>` (in label) like this */
+/*
+  const templateSnippet = (st, idx, start, snippet) => `
+    <input class="toggler custom" type="checkbox" id="tog_${st}${idx}" checked="">
+    <label class="custom" for="tog_${st}${idx}"><h3>${st} snippet</h3> <span title="Hide ${st} Snippet">🔼</span><span title="Show ${st} Snippet">🔽</span></label>
+    <pre class="iiasrc" id="${st}_snippet${idx}" data-id="${idx}" data-ln-start-from="${start}">${escapeHtml(snippet)}</pre>
+`;
+*/
+
+  container.innerHTML = "";
+
+  edits.forEach((edit, idx) => {
+    const card = document.createElement("div");
+    card.className = "card",
+    card.id = "card" + idx;
+
+    const file = edit.file || "UNKNOWN";
+    const kind = edit.kind || "edit";
+    const loc = edit.location || {};
+    // Find line numbers in location string (sometime)
+    const lines = typeof loc == 'string' ? loc.match(/(\d+)/g) : ["?", "?"];
+    const start = loc.start_line || lines[0]; // int or "?"
+    const end = loc.end_line || lines[1]; // int or "?"
+    const oldSnippet = edit.old_snippet || "old_snippet is " + (typeof(edit.old_snippet) == 'string' ? "empty" : typeof(edit.old_snippet));
+    const newSnippet = edit.new_snippet || "new_snippet is " + (typeof(edit.new_snippet) == 'string' ? "empty" : typeof(edit.new_snippet));
+    const rationale = edit.rationale || "";
+
+    let html = "";
+
+    html += `<div class="header-line"><h2>${file}</h2><span class="badge">${kind}</span></div>`;
+    html += `<div class="meta" data-file="${file}" data-start_line="${start}">Lines ${start}–${end}</div>`;
+
+    if (rationale) {
+      html += `<div class="rationale"><strong>Rationale:</strong> ${rationale}</div>`;
+    }
+
+    if (oldSnippet) {
+      html += templateSnippet('old', idx, start, oldSnippet)
+    }
+    if (newSnippet) {
+      html += templateSnippet('new', idx, start, newSnippet)
+    }
+
+    card.innerHTML = html;
+    container.appendChild(card);
+  });
+
+  return 0;
+}
+
+// board.js call main();
+</script>
+</body>
+</html>

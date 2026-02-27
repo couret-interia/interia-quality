@@ -1,0 +1,574 @@
+.dark{display:none}
+@media(prefers-color-scheme:dark){
+  .dark{display:block;}
+  .light{display:none;}
+}
+:root {
+  /* Base */
+  --bg: #0B0D11;
+  --fg: #E6EDF3;
+  --bgg1: #0D1117;
+  --bgg2: #1A1F29;
+  --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+
+  /* Top bar (menus top active) */
+  --mtb-bg: rgba(0,0,0,.66);
+  --mta-bg: rgba(237,237,237,.66);
+  --mta-cr: #111;
+  --mta-br: 999px; /* or --radius-pill */
+
+  /* Accents principaux */
+  --accent-1: #00E6FF;
+  --accent-2: #7B5FFF;
+  --accent-ok: #00FFAA;
+  --accent-fail: #FF5566;
+  --accent-link: #58A6FF;
+  --accent-info: #B3E6FF;
+
+  /* Neutres / surfaces */
+  --muted: #9BA3AF;
+  --surface: #161B22;
+  --surface-alt: #0D1117;
+  --surface-alt-2: #11141A;
+  --surface-strong: #21262D;
+  --border-subtle: #1E2430;
+  --surface-primary-badge: #1F6FEB;
+
+  /* Typo & tailles */
+  --h1-size: 2.4rem;
+  --text-sm: 0.85rem;
+  --text-xs: 0.8rem;
+  --radius-md: .5rem;
+  --radius-lg: .7rem;
+  --radius-pill: 999px;
+
+  /* Ombres */
+  --shadow-base-rgba: rgba(255, 255, 255, 0.15);
+  --shadow-card-rgba: rgba(0, 200, 255, 0.9);
+  --shadow-base: 0 0 .5rem var(--shadow-base-rgba);
+  --shadow-card: 0 0.3rem .7rem var(--shadow-card-rgba);
+
+  /* Dégradés */
+  --gradient-h1: -webkit-linear-gradient(var(--accent-1), var(--accent-2));
+  --gradient-bar: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+
+  color-scheme: light dark;
+
+  /* Base */
+  --bg:   light-dark(#F5F5FA, #0B0D11);
+  --fg:   light-dark(#14141F, #E6EDF3);
+  --bgg1: light-dark(#F5F5FA, #0D1117);
+  --bgg2: light-dark(#E6EDF3, #1A1F29);
+  --bgg:  linear-gradient(135deg,var(--bgg1),var(--bgg2));
+
+  /* Top bar (menus top active) */
+  --mtb-bg: light-dark(rgba(237,237,237,.66), rgba(0,0,0,.66));
+  --mta-bg: light-dark(rgba(0,0,0,.66), rgba(161,161,161,.66));
+  --mta-cr: light-dark(#aaa,#111);
+
+  /* Accents principaux (bleu-cyan / violet) */
+  --accent-1:     light-dark(#0077FF, #00E6FF);
+  --accent-2:     light-dark(#8B5FFF, #7B5FFF);
+  --accent-ok:    light-dark(#059669, #00FFAA);
+  --accent-fail:  light-dark(#DC2626, #FF5566);
+  --accent-link:  light-dark(#2563EB, #58A6FF);
+  --accent-info:  light-dark(#2563EB, #B3E6FF);
+
+  /* Neutres / surfaces */
+  --muted:               light-dark(#6B7280, #9BA3AF);
+  --surface:             light-dark(#FFFFFF, #161B22);
+  --surface-alt:         light-dark(#F3F4F6, #0D1117);
+  --surface-alt-2:       light-dark(#E5E7EB, #11141A);
+  --surface-strong:      light-dark(#E5E7EB, #21262D);
+  --border-subtle:       light-dark(#D1D5DB, #1E2430);
+  --surface-primary-badge: light-dark(#2563EB, #1F6FEB);
+
+  /* Typo & tailles */
+  --h1-size:     2.4rem;
+  --text-sm:     0.85rem;
+  --text-xs:     0.8rem;
+  --radius-md:   0.5rem;
+  --radius-lg:   0.7rem;
+  --radius-pill: 999px;
+  --font-code:   var(--text-sm) / normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'Source Code Pro', 'source-code-pro', monospace;
+
+  /* Ombres */
+  --shadow-base-rgba: light-dark(rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.15));
+  --shadow-card-rgba: light-dark(rgba(15, 23, 42, 0.15), rgba(0, 200, 255, 0.15));
+  --shadow-base: 0 0 0.5rem var(--shadow-base-rgba);
+  --shadow-card: 0 0.3rem 0.7rem var(--shadow-card-rgba);
+
+  /* Dégradés */
+  --gradient-h1:  -webkit-linear-gradient(var(--accent-1), var(--accent-2));
+  --gradient-bar: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+}
+
+:root{
+  &:has(input[name="color-scheme"][value="light dark"]:checked){color-scheme:light dark;}
+  &:has(input[name="color-scheme"][value="light"]:checked){color-scheme:light;.dark{display:none}.light{display:block}}
+  &:has(input[name="color-scheme"][value="dark"]:checked){color-scheme:dark;.light{display:none}.dark{display:block}}
+}
+
+.light-switch label{cursor:pointer;margin:0 .25rem;color:var(--fg)}
+.light-switch input[type="radio"]{display:none}
+.light-switch input[type="radio"] + label{padding:.2rem .5rem}
+.light-switch input[type="radio"]:checked + label{background:var(--mta-bg);color:var(--mta-cr);border-radius:var(--mta-br)}
+
+/* --------- Base --------- */
+
+html, body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  background: var(--bgg);
+  color: var(--fg);
+  font-family: var(--font-main);
+  text-align: center;
+}
+
+/* --------- Titres --------- */
+
+h1 {
+  text-align: center;
+  margin: 1.2rem 0;
+  font-size: var(--h1-size);
+  background: var(--gradient-h1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* --------- Textes divers --------- */
+
+.ok {
+  color: var(--accent-ok);
+}
+
+.fail {
+  color: var(--accent-fail);
+}
+
+/* ---------- Animate details --------- */
+
+details::details-content {
+  opacity: 0;
+  transition: content-visibility 300ms allow-discrete step-end, opacity 300ms;
+}
+
+details[open]::details-content {
+  opacity: 1;
+  transition: content-visibility 300ms allow-discrete step-start, opacity 300ms;
+}
+
+summary {
+  cursor: pointer;
+}
+
+/* ---------- CLI commands panel --------- */
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.cli-commands summary {
+  line-height: 1rem;
+  border-radius: var(--mta-br);
+  padding: 0 .5rem;
+}
+
+.cli-commands summary::marker {
+  content: '';
+}
+
+.cli-commands[open] summary {
+  color: var(--mta-cr);
+  background: var(--mta-bg);
+}
+
+.cli-commands[open] .card::before,
+.cli-commands[open] .card::after {
+  display: block;
+  margin: 0.5rem 0;
+  font-size: x-small;
+}
+
+.cli-commands[open] .card::before {
+  content: "📌 All buttons launch their dedicated command.";
+}
+
+.cli-commands[open] .card::after {
+  content: "ℹ️ After run's, reload page to see change.";
+}
+
+.cli-commands {
+  left: 0.5rem;
+  padding: .6rem .1rem !important;
+  position: sticky;
+  text-align: left;
+  top: 3rem !important;
+}
+
+.cli-commands .card {
+  max-height: calc(100vh - 7rem);
+  overflow: auto;
+  position: absolute;
+  width: 16rem;
+}
+
+.cli-commands button {
+  cursor: pointer;
+}
+
+.cli-commands button::before {
+  content:'▶';
+  display: inline-block;
+  line-height: 1.23rem;
+  margin-left: 0.2rem;
+  margin-right: 0.321rem;
+}
+
+.cli-commands button.run::before,
+.cli-commands button:hover:not(.run)::before {
+  content:'⚙️';
+  margin-right: 0.1rem;
+  margin-left: 0;
+}
+
+.cli-commands button.run::before {
+  animation: rotating 1s linear infinite;
+  transform: scale(1.2);
+}
+
+/* buttons Run Commands, Toggle, Copy, (Down)Load Snippet (text Area, Ace editors) */
+
+.btn-tiny {
+  margin: 0.2rem 0.2rem 0 0;
+  padding: 1px .2rem 3px;
+  text-transform: capitalize;
+  background: var(--mtb-bg);
+  border-radius: .2rem;
+  border-width: 1px;
+}
+
+@media (max-width: 999px) {
+  .btn-tiny {
+    padding: 10px .2rem;
+  }
+}
+
+/* --------- Résumé / Infos --------- */
+
+#summary {
+  text-align: center;
+  margin-top: -0.6rem;
+  margin-bottom: 1.2rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+#repo {
+  font-size: 0.95rem;
+  display: block;
+  margin: -.4rem 0;
+}
+
+/* --------- Layout container / grid --------- */
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: .6rem 1.2rem 2.4rem;
+}
+
+.grid {
+  max-width: 1000px;
+  margin: 1.2rem auto 2.4rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  padding: 0 1rem;
+}
+
+/* --------- Cartes --------- */
+
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.2rem;
+  margin-bottom: 1rem;
+  border: .15rem solid var(--border-subtle);
+  box-shadow: var(--shadow-card);
+  text-align: left;
+}
+
+.card h2 {
+  margin: .1rem;
+  font-size: 1.2rem;
+  color: var(--accent-1);
+}
+
+.card p {
+  margin: 0 0 .6rem;
+  font-size: 0.9rem;
+}
+
+.card a {
+  color: var(--accent-link);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.card code {
+  background: var(--surface-alt);
+  padding: .2rem .4rem;
+  border-radius: .3rem;
+}
+
+/* Variante carte avec header + barre de score */
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.card-header h2 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--fg);
+}
+
+.score {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+.bar-bg {
+  background: var(--surface-alt);
+  border-radius: var(--radius-pill);
+  height: .6rem;
+  margin: .4rem 0 .6rem;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: .6rem;
+  background: var(--gradient-bar);
+}
+
+/* Stats / métadonnées */
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1rem;
+  font-size: var(--text-sm);
+}
+
+.small,
+.meta,
+.keys,
+.badge span {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+/* --------- Badges --------- */
+
+.badge {
+  display: inline-block;
+  background: var(--surface-strong);
+  border-radius: var(--radius-pill);
+  padding: .2rem .5rem;
+  margin-right: .4rem;
+  font-size: var(--text-xs);
+  color: var(--fg);
+}
+
+.cite-list code,
+.keys code {
+  background: var(--surface-alt);
+  padding: .2rem .3rem;
+  border-radius: .3rem;
+  margin-right: .3rem;
+}
+
+/* Variante badge mise en avant */
+
+.badge.primary {
+  background: var(--surface-primary-badge);
+  color: var(--fg);
+}
+
+/* --------- Code / préformaté --------- */
+
+code {
+  background: var(--surface);
+  padding: .25rem .45rem;
+  border-radius: .3rem;
+}
+
+pre {
+  background: var(--surface-alt);
+  border-radius: var(--radius-md);
+  font: var(--font-code);
+  min-height: var(--text-sm);
+  overflow-x: auto;
+  padding: .6rem;
+}
+
+/* --------- Footer --------- */
+
+.footer {
+  text-align: center;
+  opacity: 0.65;
+  font-size: 0.85rem;
+  margin: 2rem 0 1.2rem;
+}
+
+/* --------- Canvas / board --------- */
+
+canvas,
+#canvas {
+  display: block;
+  margin: 0 auto 2.9rem;
+  background: var(--surface-alt-2);
+  border: .15rem solid var(--border-subtle);
+  width: 1000px;
+  height: 700px;
+}
+canvas.wide,
+#canvas.wide {
+  height: 400px;
+}
+
+/* --------- Sidebar / info --------- */
+
+.sidebar,
+#info {
+  position: fixed;
+  right: .35rem;
+  top: 3rem;
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  border: .15rem solid var(--border-subtle);
+  padding: .7rem;
+  font-size: var(--text-sm);
+  width: 260px;
+}
+
+.sidebar.left,
+#info.left {
+  left: .35rem;
+  right: initial;
+}
+
+.sidebar h2 {
+  margin-top: 0;
+  font-size: 1rem;
+}
+
+/* --------- Rationale / header line --------- */
+
+.rationale {
+  font-size: .75rem;
+  margin-top: .4rem;
+  color: var(--accent-info);
+}
+
+.header-line {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+
+/* --------- Aideurs --------- */
+
+.hide {
+  display: none;
+}
+
+/* Little tweaks to sml & lrg screen */
+
+@media (max-width: 449px) {
+  .light-switch.top-bar.top-bar-right {
+    display: none;
+  }
+}
+@media (max-width: 567px) {
+  .light-switch.top-bar.top-bar-right label {
+    margin: .25rem;
+  }
+}
+@media (max-width: 1279px) {
+  h1 {
+    margin: 2.4rem 0 1.2rem 0;
+  }
+}
+
+/* --------- Top Bars --------- */
+
+.top-bar a{color:var(--accent-link);text-decoration:none}
+.top-bar{position:fixed;top:.35rem;left:.35rem;z-index:1000}
+.top-bar-right{left:initial;right:.35rem;}
+.top-bar,.sticky{padding:.6rem .85rem;background:var(--mtb-bg);border-radius:var(--radius-md);box-shadow:var(--shadow-base)}
+
+/* box-shadow:0 .2rem .6rem rgba(0,0,0,.2) */
+
+.top-bar a.active {
+  background:var(--mta-bg);
+  color:var(--mta-cr);
+  border-radius:var(--mta-br);
+  padding: .2rem .5rem;
+}
+
+
+/* --- notification --- */
+
+.notification {
+  position: fixed;
+  top: 3rem;
+  right: 0.6rem;
+  margin-left: 0.6rem;
+  background-color: var(--mta-bg);
+  color: var(--mta-cr);
+  padding: 0.6rem 0.95rem;
+  border-radius: var(--radius-md);
+  display: none;
+  z-index: 1002;
+  box-shadow: var(--shadow-card);
+  text-align: left;
+}
+
+/* --------- Toogle switch FR/EN --------- */
+
+input.tog[type="radio"]{display:none}
+label.tog{
+  font-size:1.2rem;
+  float:right;
+  position:sticky;
+  top:0;
+  cursor:pointer;
+  padding:.6rem 1.2rem;
+  background:rgba(126,126,126,.25);
+  border-radius:.2rem;
+  margin-right:.2rem;
+}
+input[type="radio"]:checked+label.tog{
+  background:rgba(216,162,126,.52);
+}
+.toggle-fr,
+input.tog[type="radio"]:checked+label.tog+.toggle>.toggle-en{
+  display:block;
+}
+input.tog[type="radio"]:checked+label.tog+.toggle>.toggle-fr,
+.toggle-en{
+  display:none;
+}
