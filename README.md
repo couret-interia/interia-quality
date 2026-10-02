@@ -1,3 +1,5 @@
+> **Documentation raccordée au portefeuille actuel — 1 October 2026.** This repository provides supporting tools, templates or community material. Passing software checks is not a mathematical proof of RH or a validation of a general scientific claim. Current bounded publications and permanent identifiers: [CURRENT_STATUS.md](CURRENT_STATUS.md) · [Couret–Unification](https://www.couretunification.fr/publications-et-depots/).
+
 # 🧪 InterIA Quality Pack v4
 
 <p align="center">
